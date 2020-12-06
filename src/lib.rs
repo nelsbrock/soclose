@@ -9,6 +9,7 @@ use std::time::Duration;
 use std::{hint, io, thread};
 
 const BLOCK_SIZE: usize = 8192;
+const BLOCK: [u8; BLOCK_SIZE] = [0; BLOCK_SIZE];
 
 #[derive(Clone)]
 pub struct SoCloseServer {
@@ -106,9 +107,8 @@ impl SoCloseServer {
         }
 
         stream.write_all(&*self.response_head)?;
-        let fake_file_buffer = [0; BLOCK_SIZE];
         for _ in 0..self.send_block_count {
-            stream.write_all(&fake_file_buffer)?;
+            stream.write_all(&BLOCK)?;
             thread::sleep(self.sleep_between);
         }
 
